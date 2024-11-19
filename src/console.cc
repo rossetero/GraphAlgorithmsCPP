@@ -69,6 +69,12 @@ class ConsoleInterface {
             showGraphNotLoadedMessage();
           break;
         case '8':
+          if (isGraphLoaded)
+            fordBellman();
+          else
+            showGraphNotLoadedMessage();
+          break;
+        case '9':
           exportGraph();
           break;
         case '0':
@@ -92,10 +98,32 @@ class ConsoleInterface {
     mvprintw(6, 0, "5. Shortest paths between all vertices");
     mvprintw(7, 0, "6. Least spanning tree");
     mvprintw(8, 0, "7. Solve Traveling Salesman Problem");
-    mvprintw(9, 0, "8. Export graph to .dot file");
+    mvprintw(9, 0, "8. Ford-Bellman Alogrithm");
+    mvprintw(10, 0, "9. Export graph to .dot file");
     mvprintw(11, 0, "0. Exit");
     mvprintw(13, 0, "Enter your choice: ");
     refresh();
+  }
+
+  void fordBellman() {
+    clear();
+    mvprintw(0, 0, "Enter start vertex: ");
+    refresh();
+    try {
+      int startVertex = -1;
+      scanw((char*)"%d", &startVertex);
+      std::vector<int> result =
+          GraphAlgorithms::FordBellmanAlgorithm(graph, startVertex);
+      mvprintw(2, 0, "Ford-Bellman Result:");
+      for (size_t i = 0; i < result.size(); i++) {
+        int vertex = result[i];
+        mvprintw(4 + i, 0, "%d ", vertex);
+      }
+    } catch (...) {
+      mvprintw(2, 0, "Search Error!");
+    }
+    refresh();
+    getch();
   }
 
   void loadGraphFromFile() {

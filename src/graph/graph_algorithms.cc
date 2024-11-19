@@ -2,6 +2,26 @@
 
 namespace s21 {
 
+std::vector<int> GraphAlgorithms::FordBellmanAlgorithm(const Graph& graph,
+                                                       int start_vertex) {
+  const Matrix<int>& adjacency_matrix = graph.adjacency_matrix();
+  int order = graph.order();
+  const int inf = std::numeric_limits<int>::max();
+  std::vector<int> distance(order, inf);
+  distance[start_vertex] = 0;
+  for (int i = 0; i < order - 1; ++i) {
+    for (int u = 0; u < order; ++u) {
+      for (int v = 0; v < order; ++v) {
+        if (adjacency_matrix(u, v) != 0 && distance[u] != inf &&
+            distance[u] + adjacency_matrix(u, v) < distance[v]) {
+          distance[v] = distance[u] + adjacency_matrix(u, v);
+        }
+      }
+    }
+  }
+  return distance;
+}
+
 std::vector<int> GraphAlgorithms::DepthFirstSearch(const Graph& graph,
                                                    int start_vertex) {
   if (start_vertex < 0 || static_cast<size_t>(start_vertex) >= graph.order()) {
@@ -66,8 +86,7 @@ std::vector<int> GraphAlgorithms::BreadthFirstSearch(const Graph& graph,
 
 int GraphAlgorithms::DijkstraMinWeightAlgorithm(Graph& graph, int start_vertex,
                                                 int end_vertex) {
-  if (start_vertex < 0 ||
-      static_cast<size_t>(end_vertex) >= graph.order()) {
+  if (start_vertex < 0 || static_cast<size_t>(end_vertex) >= graph.order()) {
     throw std::runtime_error("Invalid input");
   }
 
@@ -83,8 +102,7 @@ int GraphAlgorithms::DijkstraMinWeightAlgorithm(Graph& graph, int start_vertex,
   int current_vertex = start_vertex;
 
   while (!is_visited[end_vertex]) {
-    for (int neighbor_vertex = 0; neighbor_vertex < order;
-         ++neighbor_vertex) {
+    for (int neighbor_vertex = 0; neighbor_vertex < order; ++neighbor_vertex) {
       int edge_weight = adjacency_matrix(current_vertex, neighbor_vertex);
 
       if (edge_weight && !is_visited[neighbor_vertex]) {
@@ -158,8 +176,6 @@ Matrix<int> GraphAlgorithms::FloydsAlgorithm(Graph& graph) {
 }
 
 Matrix<int> GraphAlgorithms::GetLeastSpanningTree(Graph& graph) {
-  // Prim's Algorithm in C++
-
   const int inf = std::numeric_limits<int>::max();
   const Matrix<int>& adjacency_matrix = graph.adjacency_matrix();
   size_t order = graph.order();
@@ -205,4 +221,4 @@ GraphAlgorithms::TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(
                                     std::move(result.distance)};
 }
 
-}  // namespace s21
+}

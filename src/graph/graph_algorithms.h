@@ -18,6 +18,8 @@ class GraphAlgorithms {
     double distance;
   };
 
+  static std::vector<int> FordBellmanAlgorithm(const Graph& graph,
+                                               int start_vertex);
   static std::vector<int> DepthFirstSearch(const Graph& graph,
                                            int start_vertex);
 
